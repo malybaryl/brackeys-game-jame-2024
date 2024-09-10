@@ -16,3 +16,9 @@ canvas {
     background-color: #000;
     border: 2px solid #FFF;
 }
+
+#gameCanvas {
+    width: 800px;   /* Skalowanie szerokości */
+    height: 640px;  /* Skalowanie wysokości */
+    image-rendering: pixelated; /* Zapewnia ostre krawędzie w stylu pixel-art */
+}
