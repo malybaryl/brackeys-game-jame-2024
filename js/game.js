@@ -2,6 +2,11 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+const main_menu_music_source = 'assets/audio/morning-funny-beat-pixabay.mp3';
+const cut_scene_music_source = 'assets/audio/a-jazz-piano-pixabay.mp3';
+const game_music_source = 'assets/audio/neon-fury-neura-flow-pixabay.mp3';
+const scream_source = 'assets/audio/cartoon-scream-1-pixabay.mp3';
+
 canvas.width = 400;
 canvas.height = 320;
 
@@ -125,6 +130,66 @@ function assetsWalkable()
             assets[2][i] = new Image();
             assets[2][i].src = 'assets/walkable/path/' + i.toString() +'.png';
             
+        }
+        
+        return assets;
+    }
+}
+
+function assetsBackground()
+{
+    {
+        let assets = []
+        // box
+        if (!assets[0]) {
+            assets[0] = [];
+        }
+
+        // log
+        if (!assets[1]) {
+            assets[1] = [];
+        }
+
+        // path
+        if (!assets[2]) {
+            assets[2] = [];
+        }
+
+        // initialization array
+        for (let i = 0; i <= 3; i++)
+        {
+            
+            if (i <= 2)
+            {
+                assets[0][i] = new Image();
+                assets[0][i].src = 'assets/background/1.Close/' + i.toString() +'.png';
+                assets[1][i] = new Image();
+                assets[1][i].src = 'assets/background/2.Far/' + i.toString() +'.png';
+            }
+            
+            assets[2][i] = new Image();
+            assets[2][i].src = 'assets/background/3.Tornado/' + i.toString() +'.png';
+            
+        }
+        
+        return assets;
+    }
+}
+
+function assetsCutscene()
+{
+    {
+        let assets = []
+        // box
+        if (!assets[0]) {
+            assets[0] = [];
+        }
+
+        // initialization array
+        for (let i = 0; i <= 53; i++)
+        {
+            assets[i] = new Image();
+            assets[i].src = 'assets/cutscene/' + i.toString() +'.png';  
         }
         
         return assets;
@@ -481,7 +546,195 @@ const path =
     }
 }
 
+const background = 
+{
+    init: function(assets)
+    {
+        this.assets = assets;
+        this.x_tornado = 0;
+        this.y = 0;
+        this.width = canvas.width;
+        this.height = canvas.height;
+        this.animation_speed = 0.05;
+        this.anim_index = 0;
+        this.image_to_show_tornado = this.assets[2][0];
 
+        this.x_far_layer = 0;
+        this.x_far_layer_2 = -canvas.width;
+        this.speed_far_layer = 0.5; 
+        this.image_to_show_far_layer = this.assets[1][0]; 
+        this.image_to_show_far_layer_2 = this.assets[1][0]; 
+
+        this.x_close_layer = 0;
+        this.x_close_layer_2 = -canvas.width;
+        this.speed_close_layer = 1; 
+        this.image_to_show_close_layer = this.assets[0][0]; 
+        this.image_to_show_close_layer_2 = this.assets[0][0]; 
+    },
+
+
+    update: function(score)
+    {
+        if (score <= 100)
+        {
+            this.speed_far_layer = 0.5;
+            this.image_to_show_far_layer = this.assets[1][0]; 
+            this.image_to_show_far_layer_2 = this.assets[1][0]; 
+            this.speed_close_layer = 1;
+            this.image_to_show_close_layer = this.assets[0][0]; 
+            this.image_to_show_close_layer_2 = this.assets[0][0]; 
+        }
+        else if (score <= 300)
+        {
+            this.speed_far_layer = 1;
+            this.speed_close_layer = 2;
+        }
+        else
+        {
+            this.speed_far_layer = 2;
+            this.speed_close_layer = 4;
+        }
+
+        // animation tornado
+        this.anim_index += this.animation_speed;
+        if (this.anim_index > 3.5)
+        {
+            this.anim_index = 0;
+        }
+        this.image_to_show_tornado = this.assets[2][Math.floor(this.anim_index)];
+      
+        this.x_far_layer += this.speed_far_layer;
+        this.x_far_layer_2 += this.speed_far_layer;
+        this.x_close_layer -= this.speed_close_layer;
+        this.x_close_layer_2 -= this.speed_close_layer;
+
+        if (this.x_far_layer >= canvas.width)
+        {
+            this.x_far_layer = -canvas.width;
+            if (score <= 100)
+            {
+                this.image_to_show_far_layer = this.assets[1][0]; 
+            } 
+            else if(score <= 300)
+            {
+                this.image_to_show_far_layer = this.assets[1][1]; 
+            }
+            else if (score > 300)
+            {
+                this.image_to_show_far_layer = this.assets[1][2]; 
+            }
+        }
+        if (this.x_far_layer_2 >= canvas.width)
+        {
+            this.x_far_layer_2 = -canvas.width;
+            if (score <= 100)
+            {
+                this.image_to_show_far_layer_2 = this.assets[1][0]; 
+            } 
+            else if(score <= 300)
+            {
+                this.image_to_show_far_layer_2 = this.assets[1][1]; 
+            }
+            else if (score > 300)
+            {
+                this.image_to_show_far_layer_2 = this.assets[1][2]; 
+            }
+        }
+        if (this.x_far_layer >= canvas.width)
+        {
+            this.x_far_layer = -canvas.width;
+            if (score <= 100)
+            {
+                this.image_to_show_far_layer = this.assets[1][0]; 
+            } 
+            else if(score <= 300)
+            {
+                this.image_to_show_far_layer = this.assets[1][1]; 
+            }
+            else if (score > 300)
+            {
+                this.image_to_show_far_layer = this.assets[1][2]; 
+            }
+        }
+        if (this.x_far_layer_2 >= canvas.width)
+        {
+            this.x_far_layer_2 = -canvas.width;
+            if (score <= 100)
+            {
+                this.image_to_show_far_layer_2 = this.assets[1][0]; 
+            } 
+            else if(score <= 300)
+            {
+                this.image_to_show_far_layer_2 = this.assets[1][1]; 
+            }
+            else if (score > 300)
+            {
+                this.image_to_show_far_layer_2 = this.assets[1][2]; 
+            }
+        }
+        if (this.x_close_layer <= -canvas.width)
+        {
+            this.x_close_layer = canvas.width;
+            if (score <= 100)
+            {
+                this.image_to_show_close_layer = this.assets[0][0]; 
+            } 
+            else if(score <= 300)
+            {
+                this.image_to_show_close_layer = this.assets[0][1]; 
+            }
+            else if (score > 300)
+            {
+                this.image_to_show_close_layer = this.assets[0][2]; 
+            }
+        }
+        if (this.x_close_layer_2 <= -canvas.width)
+        {
+            this.x_close_layer_2 = canvas.width;
+            if (score <= 100)
+            {
+                this.image_to_show_close_layer_2 = this.assets[0][0]; 
+            } 
+            else if(score <= 300)
+            {
+                this.image_to_show_close_layer_2 = this.assets[0][1]; 
+            }
+            else if (score > 300)
+            {
+                this.image_to_show_close_layer_2 = this.assets[0][2]; 
+            }
+        }
+
+    },
+
+    draw: function(ctx) {
+        if (this.image_to_show_tornado) {
+            ctx.drawImage(this.image_to_show_tornado, this.x_tornado, this.y, this.width, this.height);
+        } else {
+            console.error('Image to show is not defined.');
+        }
+        if (this.image_to_show_far_layer) {
+            ctx.drawImage(this.image_to_show_far_layer, this.x_far_layer, this.y, this.width, this.height);
+        } else {
+            console.error('Image to show is not defined.');
+        }
+        if (this.image_to_show_far_layer_2) {
+            ctx.drawImage(this.image_to_show_far_layer_2, this.x_far_layer_2, this.y, this.width, this.height);
+        } else {
+            console.error('Image to show is not defined.');
+        }
+        if (this.image_to_show_close_layer) {
+            ctx.drawImage(this.image_to_show_close_layer, this.x_close_layer, this.y, this.width, this.height);
+        } else {
+            console.error('Image to show is not defined.');
+        }
+        if (this.image_to_show_close_layer_2) {
+            ctx.drawImage(this.image_to_show_close_layer_2, this.x_close_layer_2, this.y, this.width, this.height);
+        } else {
+            console.error('Image to show is not defined.');
+        }
+    }
+}
 
 
 const score_text = 
@@ -501,15 +754,114 @@ const score_text =
 
     draw: function(ctx)
     {
-        ctx.font = '30px Arial'; // Ustawienie czcionki i rozmiaru
+        ctx.font = '30px Pixelify Sans'; // Ustawienie czcionki i rozmiaru
         ctx.fillStyle = 'white'; // Ustawienie koloru tekstu
         ctx.textAlign = 'center'; // Ustawienie wyrównania tekstu na środku
         ctx.fillText(this.text, this.x, this.y); // Rysowanie tekstu na płótnie
     }
 }
 
+const cutscene = {
+    init: function(assets) {
+        this.assets = assets;
+        this.x = 0;
+        this.y = 0;
+        this.width = canvas.width;
+        this.height = canvas.height;  
+        this.index = 0;
+        this.speed_animation = 0.1;
+        this.image_to_show = this.assets[0];    
+    },
+
+    update: function() {
+        this.index += this.speed_animation;
+        if (this.index >= 53.6) {
+            this.index = 0;
+            return false;
+        }
+        if (Math.floor(this.index) == 20) {
+            playMusic(scream_source, false);
+        }
+        this.image_to_show = this.assets[Math.floor(this.index)];
+        return true;
+    },
+
+    draw: function(ctx) {
+        if (this.image_to_show) {
+            ctx.drawImage(this.image_to_show, this.x, this.y, this.width, this.height);
+        } else {
+            console.error('Image to show is not a valid image type.');
+        }
+    }
+};
+
+const last_score_text = 
+{
+    init: function(x, y)
+    {
+        this.x = x;
+        this.y = y;
+        this.text = 'LS:' + last_score.toString();
+    },
+
+    refresh_score: function(last_score)
+    {
+        this.text = 'LS:' + last_score.toString();
+    },
+
+    draw: function(ctx)
+    {
+        ctx.font = '30px Pixelify Sans'; // Ustawienie czcionki i rozmiaru
+        ctx.fillStyle = 'white'; // Ustawienie koloru tekstu
+        ctx.textAlign = 'left'; // Ustawienie wyrównania tekstu na środku
+        ctx.fillText(this.text, this.x, this.y); // Rysowanie tekstu na płótnie
+    }
+}
+
+const high_score_text =
+{
+    init: function(x, y)
+    {
+        this.x = x;
+        this.y = y;
+        this.text = 'HS:' + high_score.toString();
+    },
+
+    refresh_score: function(high_score)
+    {
+        this.text = 'HS:' + high_score.toString()
+    },
+
+    draw: function(ctx)
+    {
+        ctx.font = '30px Pixelify Sans'; // Ustawienie czcionki i rozmiaru
+        ctx.fillStyle = 'white'; // Ustawienie koloru tekstu
+        ctx.textAlign = 'left'; // Ustawienie wyrównania tekstu na środku
+        ctx.fillText(this.text, this.x, this.y); // Rysowanie tekstu na płótnie
+    }
+}
+
+const cutscene_info_text =
+{
+    init: function(x, y)
+    {
+        this.x = x;
+        this.y = y;
+        this.text = '"S" TO SKIP';
+    },
+
+    draw: function(ctx)
+    {
+        ctx.font = '30px Pixelify Sans'; // Ustawienie czcionki i rozmiaru
+        ctx.fillStyle = 'white'; // Ustawienie koloru tekstu
+        ctx.textAlign = 'right'; // Ustawienie wyrównania tekstu na środku
+        ctx.fillText(this.text, this.x, this.y); // Rysowanie tekstu na płótnie
+    }
+}
+
 // game variables
 let game_is_on = false;
+let cutscene_on = false;
 let keys = [];
 let score = 0;
 let number_of_items = getRandomInRange(2,4);
@@ -517,8 +869,18 @@ let second_stage = true;
 let third_stage = true;
 let assets_objects = assetsObjects();
 let assets_walkable = assetsWalkable();
+let assets_background = assetsBackground();
+let cutscene_assets = assetsCutscene();
 let objects = []; // Lista obiektów
 let paths = []
+let current_music;
+let handle_main_menu_music = true;
+let handle_cutscene_music = true;
+let handle_game_music = true;
+let last_score = 0;
+let high_score = 0;
+
+
 
 
 // Obsługa klawiszy
@@ -536,6 +898,11 @@ main_menu.init();
 player.init(32, canvas.height - 64, 32, 32);
 player.running = true;
 score_text.init(32);
+background.init(assets_background);
+cutscene.init(cutscene_assets);
+last_score_text.init(2, 44);
+high_score_text.init(2, 22);
+cutscene_info_text.init(canvas.width - 2, canvas.height - 2);
 
 
 // Funkcja dodawania nowych obiektów
@@ -568,6 +935,22 @@ function initPath()
         newPath.x = i;
         paths.push(newPath);
     }
+}
+
+function playMusic(source, loop = true) {
+    // Jeśli już odtwarzamy jakąś muzykę, zatrzymaj ją
+    if (current_music) {
+        current_music.pause();
+        current_music.currentTime = 0;
+    }
+
+    // Tworzymy nowy obiekt audio
+    current_music = new Audio(source);
+    if (loop == true)
+    {
+        current_music.loop = true; // Ustawienie pętli
+    }
+    current_music.play(); // Odtwarzanie muzyki
 }
 
 // Funkcja sprawdzająca kolizję
@@ -611,11 +994,10 @@ function handlePathCollision(player, path) {
 // main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    
     // Grawitacja
     player.velY += 1.5;
     player.y += player.velY*2/3;
-    let jumping_speed;
 
     // Kolizja z podłożem
     if (player.y + player.height >= canvas.height) {
@@ -630,39 +1012,52 @@ function gameLoop() {
     }
 
     // Skakanie
-    if ((keys['ArrowUp'] || keys[' ']) && !player.jumping) {
+    if ((keys['ArrowUp'] || keys[' '] || keys['w']) && !player.jumping) {
         if (game_is_on) {
             player.jumping = true;
             player.velY = -15;
         } else {
-            game_is_on = true;
+            cutscene_on = true;
             score = 0;
             objects = [];
             paths = []
             player.speed_animation = 0.1;
             player.speed = 5
-            jumping_speed = player.speed * 2;
             initObjects();
             initPath();
             second_stage = true;
             third_stage = true;
+            handle_main_menu_music = true;
+            handle_cutscene_music = true;
+            handle_game_music = true;
         }
     }
 
     // update
     if (game_is_on) {
+        if (handle_game_music == true)
+        {
+            playMusic(game_music_source);            
+            handle_game_music = false;
+        }
         player.update();
         paths.forEach(obj => obj.update())
         objects.forEach(obj => obj.update());
         score += 0.1;
         score_text.refresh_score(Math.floor(score));
-        console.log(score);
+        background.update(score);
         // Sprawdzanie kolizji
         objects.forEach(obj => {
             if (checkCollision(player, obj)) 
                 {
-                game_is_on = false; // Koniec gry
-                console.log("Game Over!");
+                game_is_on = false; 
+                last_score = Math.floor(score);
+                if (last_score >= high_score)
+                {
+                    high_score = last_score;
+                }
+                last_score_text.refresh_score(last_score);
+                high_score_text.refresh_score(high_score);
             }
         paths.forEach(obj => 
             {
@@ -691,18 +1086,53 @@ function gameLoop() {
                 obj.speed = 4;
             })
         }
-    } else {
-        main_menu.update();
+    }
+    else if (cutscene_on == true)
+    {
+        if (handle_cutscene_music == true)
+            {
+            playMusic(cut_scene_music_source);
+            handle_cutscene_music = false;
+        }
+        cutscene_on = cutscene.update();
+        if (keys['s'])
+        {
+            cutscene_on = false;
+            cutscene.index = 0;
+        }
+        if (cutscene_on == false)
+            {
+                game_is_on = true;
+            }
+    } 
+    else 
+    {
+        main_menu.update(); 
+        if (handle_main_menu_music == true)
+        {
+            playMusic(main_menu_music_source);
+            handle_main_menu_music = false;
+        }
     }
 
     // Drawing
     if (game_is_on) {
+        background.draw(ctx);
         paths.forEach(obj => obj.draw(ctx))
         player.draw(ctx);
         objects.forEach(obj => obj.draw(ctx));
         score_text.draw(ctx);
-    } else {
+    } 
+    else if (cutscene_on == true)
+    {
+        cutscene.draw(ctx);
+        cutscene_info_text.draw(ctx);
+    }
+    else 
+    {
         main_menu.draw(ctx);
+        high_score_text.draw(ctx);
+        last_score_text.draw(ctx);
     }
 
     requestAnimationFrame(gameLoop);
